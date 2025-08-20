@@ -46,8 +46,8 @@ describe("useStringCalculator", () => {
     expect(result.current.result).toBe(9);
   });
 
-  it("clears the previous result when input value changes", () => {
-    const { result } = renderHook(() => useStringCalculator("4,5"));
+  it("clears the previous result and error when input value changes", () => {
+    const { result } = renderHook(() => useStringCalculator("4,-5"));
 
     act(() => {
       result.current.calculateResult();
@@ -58,5 +58,6 @@ describe("useStringCalculator", () => {
     });
 
     expect(result.current.result).toBeNull();
+    expect(result.current.error).toBeNull();
   });
 });

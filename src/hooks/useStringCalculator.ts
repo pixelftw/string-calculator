@@ -28,6 +28,7 @@ export function useStringCalculator(
 
   function handleInputChange(value: string) {
     setResult(null);
+    setError(null);
     setInput(value);
   }
 
