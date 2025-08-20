@@ -1,11 +1,24 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
+import { add } from "./string-calculator";
 
 describe("String calculator utility", () => {
-  it.todo("should return 0 if empty string is passed to it");
+  it("should return 0 if empty string is passed to it", () => {
+    const output = add("");
 
-  it.todo("should return the number itself");
+    expect(output).toBe(0);
+  });
 
-  it.todo("should add two comma separated numbers");
+  it("should return the number itself", () => {
+    const output = add("5");
+
+    expect(output).toBe(5);
+  });
+
+  it("should add two comma separated numbers", () => {
+    const output = add("4,5");
+
+    expect(output).toBe(9);
+  });
 
   it.todo("should handle new lines");
 
