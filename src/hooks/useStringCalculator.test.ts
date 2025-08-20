@@ -1,7 +1,62 @@
-import { describe, it } from "vitest";
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { useStringCalculator } from "./useStringCalculator";
 
 describe("useStringCalculator", () => {
-  it.todo("should accept input and return string calculation result");
+  it("initializes with default values (empty input, no result, no error)", () => {
+    const { result } = renderHook(() => useStringCalculator(""));
 
-  it.todo("should return error if parameter contains negative numbers");
+    expect(result.current.input).toBe("");
+    expect(result.current.error).toBeNull();
+    expect(result.current.result).toBeNull();
+  });
+
+  it("calculates the sum of comma-separated numbers", () => {
+    const { result } = renderHook(() => useStringCalculator("4,5"));
+
+    act(() => {
+      result.current.calculateResult();
+    });
+
+    expect(result.current.result).toBe(9);
+    expect(result.current.error).toBeNull();
+  });
+
+  it("returns an error when negative numbers are provided", () => {
+    const { result } = renderHook(() => useStringCalculator("4,-5"));
+
+    act(() => {
+      result.current.calculateResult();
+    });
+
+    expect(result.current.error).toBe("negative numbers not allowed -5");
+  });
+
+  it("updates the input value via handleInputChange and recalculates correctly", () => {
+    const { result } = renderHook(() => useStringCalculator("4"));
+
+    act(() => {
+      result.current.handleInputChange("4,5");
+    });
+
+    act(() => {
+      result.current.calculateResult();
+    });
+
+    expect(result.current.result).toBe(9);
+  });
+
+  it("clears the previous result when input value changes", () => {
+    const { result } = renderHook(() => useStringCalculator("4,5"));
+
+    act(() => {
+      result.current.calculateResult();
+    });
+
+    act(() => {
+      result.current.handleInputChange("5,6");
+    });
+
+    expect(result.current.result).toBeNull();
+  });
 });
