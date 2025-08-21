@@ -3,11 +3,11 @@ import App from "./App";
 import { describe, expect, it } from "vitest";
 
 describe("App Component", () => {
-  it("Should render hello World! text inside h1 tag", () => {
+  it("Should render String calculator component", () => {
     render(<App />);
     const hellowWorldText = screen.getByRole("heading", {
       level: 1,
-      name: "Hello World!",
+      name: "String Calculator",
     });
 
     expect(hellowWorldText).toBeInTheDocument();

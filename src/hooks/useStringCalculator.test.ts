@@ -23,13 +23,13 @@ describe("useStringCalculator", () => {
   });
 
   it("returns an error when negative numbers are provided", () => {
-    const { result } = renderHook(() => useStringCalculator("4,-5"));
+    const { result } = renderHook(() => useStringCalculator("4,-5,-6"));
 
     act(() => {
       result.current.calculateResult();
     });
 
-    expect(result.current.error).toBe("negative numbers not allowed -5");
+    expect(result.current.error).toBe("Negative numbers not allowed -5,-6");
   });
 
   it("updates the input value via handleInputChange and recalculates correctly", () => {

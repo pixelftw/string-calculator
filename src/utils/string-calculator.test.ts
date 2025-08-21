@@ -38,10 +38,10 @@ describe("String calculator utility", () => {
   });
 
   it("throws an error when a negative number is provided", () => {
-    expect(() => add("1,-3")).toThrow("negative numbers not allowed -3");
+    expect(() => add("1,-3")).toThrow("Negative numbers not allowed -3");
   });
 
   it("throws an error listing all negative numbers when multiple are provided", () => {
-    expect(() => add("1,-3,-4")).toThrow("negative numbers not allowed -3,-4");
+    expect(() => add("1,-3,-4")).toThrow("Negative numbers not allowed -3,-4");
   });
 });
