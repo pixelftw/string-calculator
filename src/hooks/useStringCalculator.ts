@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { add } from "../utils/string-calculator";
+import { add } from "../utils/stringCalculator";
 
 interface StringCalculatorHookReturn {
   input: string;

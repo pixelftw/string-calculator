@@ -1,7 +1,7 @@
 import { useStringCalculator } from "../../hooks";
-import { Alert } from "../ui/alert";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+import { Alert } from "../ui/Alert";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
 import { TextArea } from "../ui/TextArea";
 
 export function StringCalculator() {

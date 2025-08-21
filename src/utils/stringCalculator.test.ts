@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { add } from "./string-calculator";
+import { add } from "./stringCalculator";
 
 describe("String calculator utility", () => {
   it("returns 0 when an empty string is provided", () => {
