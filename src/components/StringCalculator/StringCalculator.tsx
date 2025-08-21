@@ -1,3 +1,4 @@
+import type { ChangeEvent } from "react";
 import { useStringCalculator } from "../../hooks";
 import { Alert } from "../ui/Alert";
 import { Button } from "../ui/Button";
@@ -7,6 +8,10 @@ import { TextArea } from "../ui/TextArea";
 export function StringCalculator() {
   const { input, result, error, handleInputChange, calculateResult } =
     useStringCalculator("");
+
+  function handleTextAreaInputChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    handleInputChange(e.target.value);
+  }
 
   return (
     <Card>
@@ -25,9 +30,7 @@ export function StringCalculator() {
         <TextArea
           id="numbers"
           value={input}
-          onChange={(e) => {
-            handleInputChange(e.target.value);
-          }}
+          onChange={handleTextAreaInputChange}
           label="String"
           placeholder={`Enter numbers (comma, newline, or custom delimiter)\nExamples:\n1,2,3\n1\n2,3\n//;\n1;2;3`}
         />
@@ -36,13 +39,13 @@ export function StringCalculator() {
           Calculate
         </Button>
 
-        {error && (
+        {error ? (
           <Alert type="error">
             <span className="text-sm font-medium">{error}</span>
           </Alert>
-        )}
+        ) : null}
 
-        {result !== null && !error && (
+        {result !== null && !error ? (
           <Alert type="success">
             <div className="flex items-center justify-between w-full">
               <span className="text-sm font-medium">Result:</span>
@@ -51,7 +54,7 @@ export function StringCalculator() {
               </span>
             </div>
           </Alert>
-        )}
+        ) : null}
       </div>
     </Card>
   );
