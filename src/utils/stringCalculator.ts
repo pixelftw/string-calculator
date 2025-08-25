@@ -1,7 +1,10 @@
 const COMMA_AND_NEW_LINE: RegExp = /[,|\n]+/;
 const DELEMETER_PREFIX: string = "//";
 
-function addNumbers(string: string, delimiter: RegExp) {
+
+type OPERATION = 'add' | 'multiply';
+
+function calculateNumber(string: string, delimiter: RegExp, operation: OPERATION) {
   const numbers = string.trim().split(delimiter);
   const negativeNumbers: number[] = [];
 
@@ -14,8 +17,13 @@ function addNumbers(string: string, delimiter: RegExp) {
       return acc;
     }
 
-    return acc + number;
-  }, 0);
+    if (operation === 'multiply') {
+      return acc * number
+    }
+
+    return acc! + number;
+
+  }, operation === 'multiply' ? 1 : 0);
 
   if (negativeNumbers.length) {
     throw new Error(
@@ -29,26 +37,39 @@ function addNumbers(string: string, delimiter: RegExp) {
 interface ParsedDelimiter {
   parsedValue: string;
   delimiter: RegExp;
+  opration: OPERATION
 }
 
 function parseDelimiter(value: string): ParsedDelimiter {
   let delimiter = COMMA_AND_NEW_LINE;
   let parsedValue = value;
+  let opration: ParsedDelimiter['opration'] = 'add';
 
   if (value.startsWith(DELEMETER_PREFIX)) {
     const delimiterEndIndex = value.indexOf("\n");
 
-    delimiter = new RegExp(value.substring(2, delimiterEndIndex));
+    const delimeterString = value.substring(2, delimiterEndIndex)
+
+    if (delimeterString === '*') {
+      delimiter = /\*/;
+      opration = 'multiply';
+
+    } else {
+      delimiter = new RegExp(delimeterString);
+
+    }
+
     parsedValue = value.substring(delimiterEndIndex + 1);
   }
 
   return {
     delimiter,
     parsedValue,
+    opration
   };
 }
 
-export function add(stringValue: string) {
+export function stringCalculator(stringValue: string) {
   if (!stringValue || stringValue.trim() === "") {
     return 0;
   }
@@ -57,7 +78,7 @@ export function add(stringValue: string) {
     return Number(stringValue) || 0;
   }
 
-  const { delimiter, parsedValue } = parseDelimiter(stringValue);
+  const { delimiter, parsedValue, opration } = parseDelimiter(stringValue);
 
-  return addNumbers(parsedValue, delimiter);
+  return calculateNumber(parsedValue, delimiter, opration);
 }

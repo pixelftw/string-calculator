@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { add } from "../utils/stringCalculator";
+import { stringCalculator } from "../utils/stringCalculator";
 
 interface StringCalculatorHookReturn {
   input: string;
@@ -18,7 +18,7 @@ export function useStringCalculator(
 
   function calculateResult() {
     try {
-      const result = add(input);
+      const result = stringCalculator(input);
       setResult(result);
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
