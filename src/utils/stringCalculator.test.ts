@@ -38,14 +38,18 @@ describe("String calculator utility", () => {
   });
 
   it("multiplies all the numbers in case delimeter is '*'", () => {
-    expect(stringCalculator(("//*\n2*3"))).toBe(6)
+    expect(stringCalculator("//*\n2*3")).toBe(6);
   });
 
   it("throws an error when a negative number is provided", () => {
-    expect(() => stringCalculator("1,-3")).toThrow("Negative numbers not allowed -3");
+    expect(() => stringCalculator("1,-3")).toThrow(
+      "Negative numbers not allowed: -3"
+    );
   });
 
   it("throws an error listing all negative numbers when multiple are provided", () => {
-    expect(() => stringCalculator("1,-3,-4")).toThrow("Negative numbers not allowed -3,-4");
+    expect(() => stringCalculator("1,-3,-4")).toThrow(
+      "Negative numbers not allowed: -3,-4"
+    );
   });
 });

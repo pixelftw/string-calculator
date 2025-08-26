@@ -1,84 +1,94 @@
-const COMMA_AND_NEW_LINE: RegExp = /[,|\n]+/;
-const DELEMETER_PREFIX: string = "//";
+// Constants
+const DEFAULT_DELIMITER = /[,\n]+/;
+const DELIMITER_PREFIX = "//";
 
+// Types
+type Operation = "add" | "multiply";
 
-type OPERATION = 'add' | 'multiply';
+interface CalculatorConfig {
+  numbers: string;
+  delimiter: RegExp;
+  operation: Operation;
+}
 
-function calculateNumber(string: string, delimiter: RegExp, operation: OPERATION) {
-  const numbers = string.trim().split(delimiter);
-  const negativeNumbers: number[] = [];
+function validateNumbers(numbers: number[]): void {
+  const negativeNumbers = numbers.filter((num) => num < 0);
 
-  const result = numbers.reduce((acc, curr) => {
-    const number = Number(curr.trim());
-
-    if (number < 0) negativeNumbers.push(number);
-
-    if (isNaN(number)) {
-      return acc;
-    }
-
-    if (operation === 'multiply') {
-      return acc * number
-    }
-
-    return acc! + number;
-
-  }, operation === 'multiply' ? 1 : 0);
-
-  if (negativeNumbers.length) {
+  if (negativeNumbers.length > 0) {
     throw new Error(
-      `Negative numbers not allowed ${negativeNumbers.join(",")}`
+      `Negative numbers not allowed: ${negativeNumbers.join(",")}`
     );
   }
+}
+
+function parseNumbers(input: string, delimiter: RegExp): number[] {
+  return input
+    .trim()
+    .split(delimiter)
+    .map((str) => Number(str.trim()))
+    .filter((num) => !isNaN(num));
+}
+
+function performOperation(numbers: number[], operation: Operation): number {
+  const initialValue = operation === "multiply" ? 1 : 0;
+
+  const result = numbers.reduce((result, current) => {
+    return operation === "multiply" ? result * current : result + current;
+  }, initialValue);
 
   return result;
 }
 
-interface ParsedDelimiter {
-  parsedValue: string;
-  delimiter: RegExp;
-  opration: OPERATION
-}
+function parseDelimiterConfig(input: string): CalculatorConfig {
+  // Handle empty or single character input
+  if (!input?.trim()) {
+    return { numbers: "", delimiter: DEFAULT_DELIMITER, operation: "add" };
+  }
 
-function parseDelimiter(value: string): ParsedDelimiter {
-  let delimiter = COMMA_AND_NEW_LINE;
-  let parsedValue = value;
-  let opration: ParsedDelimiter['opration'] = 'add';
+  // Check for custom delimiter
+  if (!input.startsWith(DELIMITER_PREFIX)) {
+    return { numbers: input, delimiter: DEFAULT_DELIMITER, operation: "add" };
+  }
 
-  if (value.startsWith(DELEMETER_PREFIX)) {
-    const delimiterEndIndex = value.indexOf("\n");
+  const newlineIndex = input.indexOf("\n");
 
-    const delimeterString = value.substring(2, delimiterEndIndex)
+  if (newlineIndex === -1) {
+    return { numbers: input, delimiter: DEFAULT_DELIMITER, operation: "add" };
+  }
 
-    if (delimeterString === '*') {
-      delimiter = /\*/;
-      opration = 'multiply';
+  const delimiterString = input.substring(
+    DELIMITER_PREFIX.length,
+    newlineIndex
+  );
 
-    } else {
-      delimiter = new RegExp(delimeterString);
+  const numbersString = input.substring(newlineIndex + 1);
 
-    }
-
-    parsedValue = value.substring(delimiterEndIndex + 1);
+  // Special case for multiplication
+  if (delimiterString === "*") {
+    return {
+      numbers: numbersString,
+      delimiter: /\*/,
+      operation: "multiply",
+    };
   }
 
   return {
-    delimiter,
-    parsedValue,
-    opration
+    numbers: numbersString,
+    delimiter: new RegExp(delimiterString),
+    operation: "add",
   };
 }
 
-export function stringCalculator(stringValue: string) {
-  if (!stringValue || stringValue.trim() === "") {
+export function stringCalculator(input: string): number {
+  const config = parseDelimiterConfig(input);
+
+  if (!config.numbers.trim()) {
     return 0;
   }
 
-  if (stringValue.length === 1) {
-    return Number(stringValue) || 0;
-  }
+  const numbers = parseNumbers(config.numbers, config.delimiter);
 
-  const { delimiter, parsedValue, opration } = parseDelimiter(stringValue);
+  validateNumbers(numbers);
 
-  return calculateNumber(parsedValue, delimiter, opration);
+  return performOperation(numbers, config.operation);
 }

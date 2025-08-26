@@ -29,7 +29,7 @@ describe("useStringCalculator", () => {
       result.current.calculateResult();
     });
 
-    expect(result.current.error).toBe("Negative numbers not allowed -5,-6");
+    expect(result.current.error).toBe("Negative numbers not allowed: -5,-6");
   });
 
   it("updates the input value via handleInputChange and recalculates correctly", () => {
