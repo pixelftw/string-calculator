@@ -41,6 +41,14 @@ describe("String calculator utility", () => {
     expect(stringCalculator("//*\n2*3")).toBe(6);
   });
 
+  it("if delimiter is 'o' it should do sum of odd numbers only", () => {
+    expect(stringCalculator('//o\n2o3o4o5')).toBe(8)
+  })
+
+  it("if should still sum up all odd numbers if there is a new line present in the string", () => {
+    expect(stringCalculator('//o\n2o3o\n4o5')).toBe(8)
+  })
+
   it("throws an error when a negative number is provided", () => {
     expect(() => stringCalculator("1,-3")).toThrow(
       "Negative numbers not allowed: -3"
